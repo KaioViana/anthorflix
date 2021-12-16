@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"], // adicona funcionalidade/informa novas tipagens/informa que é uma DOM                                      
+    "moduleResolution": "node",                     
+    "resolveJsonModule": true,                      
+    "allowJs": true,  // informa que vamos utilizar arquivos js ou ts                           
+    "noEmit": true,   // caso executar o build, não emitirá o código do app                               
+    "isolatedModules": true,                        
+    "allowSyntheticDefaultImports": true,      // permite importar json     
+    "esModuleInterop": true,                           
+    "forceConsistentCasingInFileNames": true,          
+    "strict": false, // modo de lidar com erros                                   
+    "skipLibCheck": true,
+    "module": "commonjs",
+    "outDir": "./dist",                              /* Redirect output structure to the directory. */
+    "rootDir": "./src",
+    "typeRoots": ["./src/@types"],                            
+  },
+  "include": ["src"] // onde esta o código
+}

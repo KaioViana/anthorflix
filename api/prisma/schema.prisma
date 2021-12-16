@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Movie {
+  id              String @id @default(uuid())
+  title           String @unique
+  year            Int
+  released        String?
+  runtime         String?
+  director        String?
+  writer          String?
+  actors          String?
+  plot            String?
+  language        String
+  country         String?
+  awards          String?
+  rating          Float? @default(0.0)
+  type            String
+  gender          String
+  createdAt       DateTime? @default(now())
+  updateAt        DateTime? @updatedAt @default(now())
+  poster          Poster? @relation(fields: [poster_id], references: [id])
+  watched         Watched?
+  review          Review[]
+
+  @@map("movies")
+  poster_id       String?
+}
+
+model Poster {
+  id             String @id @default(uuid())
+  name           String
+  path           String
+  url            String
+  createdAt      DateTime? @default(now())
+  updateAt       DateTime? @updatedAt @default(now())
+  movie          Movie?
+
+  @@map("posters")
+}
+
+model User {
+  id             String @id @default(uuid())
+  name           String
+  email          String @unique
+  password       String
+  createdAt      DateTime? @default(now())
+  updateAt       DateTime? @updatedAt @default(now())
+  watched        Watched[]
+  review         Review[]
+  comment        Comment[]
+
+  @@map("users")
+}
+
+model Watched {
+  id             String @id @default(uuid())
+  watched        Boolean @default(false)
+  createdAt      DateTime? @default(now())
+  updateAt       DateTime? @updatedAt @default(now())
+  user           User @relation(fields: [user_id], references: [id])
+  movie          Movie @relation(fields: [movie_id], references: [id])
+
+  @@map("watcheds")
+  user_id       String
+  movie_id      String
+}
+
+model Review {
+  id             String @id @default(uuid())
+  evaluation     Int
+  createdAt      DateTime? @default(now())
+  updateAt       DateTime? @updatedAt @default(now())
+  user           User @relation(fields: [user_id], references: [id])
+  movie          Movie @relation(fields: [movie_id], references: [id])
+  comment        Comment[]
+
+  @@map("reviews")
+  user_id        String
+  movie_id       String
+}
+
+model Comment {
+  id             String @id @default(uuid())
+  text           String @db.VarChar(250)
+  createdAt      DateTime? @default(now())
+  updateAt       DateTime? @updatedAt @default(now())
+  user           User @relation(fields: [user_id], references: [id])
+  review         Review @relation(fields: [review_id], references: [id])
+
+  @@map("comments")
+  user_id        String
+  review_id      String
+}
