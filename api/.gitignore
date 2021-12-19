@@ -1,5 +1,6 @@
 
 dist/
+uploads/
 node_modules/
 .env
 yarn.lock

@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express'
 import multer from 'multer'
 import multerConfig from './config/multer'
+import auth from './middlewares/auth'
 import { CreateMovieController } from './controllers/CreateMovieController'
 import { UploadFileController } from './controllers/UploadFileController'
 import { ListMovieController } from './controllers/ListMovieController'
@@ -21,14 +22,16 @@ const upload = multer(multerConfig)
 routes.get('/', (req: Request, res: Response) => {
   return res.json({message: 'ANTHORFLIX'})
 })
+routes.post('/users', new CreateUserController().handle)
+routes.post('/sessions', new AuthenticateController().handle)
+
+routes.use(auth)
 routes.post('/movies', new CreateMovieController().handle)
 routes.post('/files', upload.single('file'), new UploadFileController().handle)
 routes.get('/movies', new ListMovieController().handle)
 routes.get('/movies/:id', new ListMovieByIdController().handle)
 routes.delete('/movies/:id', new DeleteMovieByIdController().handle)
 routes.post('/movies-related', new ListMovieRelatedController().handle)
-routes.post('/users', new CreateUserController().handle)
-routes.post('/sessions', new AuthenticateController().handle)
 routes.post('/watcheds', new MarkAsWatchedController().handle)
 routes.post('/reviews', new MakeMovieReviewController().handle)
 routes.post('/comments', new CreateCommentController().handle)

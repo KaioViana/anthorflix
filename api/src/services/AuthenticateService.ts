@@ -1,4 +1,5 @@
 import { prismaClient } from '../prisma'
+import authConfig from '../config/auth'
 import { compare } from 'bcryptjs'
 import { sign } from 'jsonwebtoken'
 
@@ -10,7 +11,7 @@ type AuthenticateData = {
 
 class AuthenticateService {
   async execute({ email, password }: AuthenticateData) {
-    const user = prismaClient.user.findUnique({
+    const user = prismaClient.user.findFirst({
       where: { email }
     })
     
@@ -28,9 +29,9 @@ class AuthenticateService {
     const token = sign({
       email: (await user).email,
       
-    }, 'NlwValoriza', {
+    }, authConfig.secret, {
       subject: (await user).id,
-      expiresIn: '1d'
+      expiresIn: authConfig.expiresIn
     })
 
     return {
